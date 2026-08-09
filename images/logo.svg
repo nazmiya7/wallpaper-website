@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 140" width="320" height="140">
+  <defs>
+    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7B35A0"/>
+      <stop offset="100%" stop-color="#5A1E82"/>
+    </linearGradient>
+    <linearGradient id="leafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9B4CC4"/>
+      <stop offset="100%" stop-color="#6B24A0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- White background -->
+  <rect width="320" height="140" fill="#ffffff" rx="8"/>
+
+  <!-- ── ICON GROUP (left side, centred vertically) ── -->
+  <!-- House body -->
+  <rect x="30" y="64" width="68" height="46" rx="4" fill="url(#purpleGrad)"/>
+
+  <!-- Door (centred on house body) -->
+  <rect x="52" y="78" width="24" height="32" rx="3" fill="#ffffff" opacity="0.95"/>
+
+  <!-- Roof / triangle -->
+  <polygon points="64,22 18,64 110,64" fill="url(#purpleGrad)"/>
+
+  <!-- Chimney -->
+  <rect x="88" y="32" width="10" height="22" rx="2" fill="url(#purpleGrad)"/>
+
+  <!-- ── LEFT LEAF (curving up-left from roof) ── -->
+  <path d="M30,52 Q10,30 18,10 Q36,22 30,52 Z" fill="url(#leafGrad)"/>
+  <!-- leaf vein -->
+  <path d="M30,52 Q20,32 18,12" stroke="#fff" stroke-width="0.8" fill="none" opacity="0.5" stroke-linecap="round"/>
+
+  <!-- ── RIGHT LEAF (curving up-right from roof) ── -->
+  <path d="M98,52 Q118,30 110,10 Q92,22 98,52 Z" fill="url(#leafGrad)"/>
+  <!-- leaf vein -->
+  <path d="M98,52 Q108,32 110,12" stroke="#fff" stroke-width="0.8" fill="none" opacity="0.5" stroke-linecap="round"/>
+
+  <!-- ── CENTRE SMALL LEAF (top of roof tip) ── -->
+  <path d="M64,22 Q57,8 64,2 Q71,8 64,22 Z" fill="#C084E8"/>
+
+  <!-- ── WORDMARK ── -->
+  <text
+    x="136" y="68"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="34"
+    font-weight="700"
+    fill="url(#purpleGrad)"
+    letter-spacing="1.5">INDEEVAR</text>
+
+  <!-- Tiny decorative sparkle/star after wordmark -->
+  <text x="294" y="52" font-size="14" fill="#9B4CC4">✦</text>
+
+  <!-- Thin separator line -->
+  <line x1="136" y1="80" x2="308" y2="80" stroke="#D4B8E8" stroke-width="0.8"/>
+
+  <!-- ── TAGLINE ── -->
+  <text
+    x="136" y="98"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="11"
+    font-weight="400"
+    fill="#8A5DAA"
+    letter-spacing="1.5">The complete home decor solution</text>
+</svg>

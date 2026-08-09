@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="pg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7B35A0"/>
+      <stop offset="100%" stop-color="#5A1E82"/>
+    </linearGradient>
+    <linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9B4CC4"/>
+      <stop offset="100%" stop-color="#6B24A0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Circle background -->
+  <circle cx="60" cy="60" r="58" fill="#ffffff" stroke="#7B35A0" stroke-width="3"/>
+
+  <!-- House body -->
+  <rect x="33" y="66" width="54" height="36" rx="3" fill="url(#pg)"/>
+
+  <!-- Door -->
+  <rect x="46" y="78" width="18" height="24" rx="2" fill="#fff" opacity="0.95"/>
+
+  <!-- Roof -->
+  <polygon points="60,24 22,66 98,66" fill="url(#pg)"/>
+
+  <!-- Chimney -->
+  <rect x="78" y="34" width="8" height="18" rx="2" fill="url(#pg)"/>
+
+  <!-- Left leaf -->
+  <path d="M30,52 Q12,34 20,14 Q36,26 30,52Z" fill="url(#lg)"/>
+  <path d="M30,52 Q22,34 20,16" stroke="#fff" stroke-width="0.7" fill="none" opacity="0.5" stroke-linecap="round"/>
+
+  <!-- Right leaf -->
+  <path d="M90,52 Q108,34 100,14 Q84,26 90,52Z" fill="url(#lg)"/>
+  <path d="M90,52 Q98,34 100,16" stroke="#fff" stroke-width="0.7" fill="none" opacity="0.5" stroke-linecap="round"/>
+
+  <!-- Centre leaf -->
+  <path d="M60,24 Q54,10 60,4 Q66,10 60,24Z" fill="#C084E8"/>
+
+  <!-- INDEEVAR text below -->
+  <text x="60" y="111" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="#7B35A0" letter-spacing="2">INDEEVAR</text>
+</svg>
