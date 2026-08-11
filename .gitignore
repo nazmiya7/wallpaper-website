@@ -2,3 +2,5 @@
 Thumbs.db
 .vscode/
 .idea/
+.file_collections/
+*.pdf
