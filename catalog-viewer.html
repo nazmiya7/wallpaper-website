@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interactive Catalog Viewer — Rimal Italian Wall Covering</title>
+  <meta name="description" content="Browse through our high-resolution design catalogs page by page. Find your favorite wallpaper patterns and inquire directly." />
+  <link rel="stylesheet" href="styles.css" />
+  
+  <style>
+    /* Catalog Viewer Specific Premium Styling */
+    .viewer-hero {
+      background: linear-gradient(135deg, #161513 0%, #2a251e 100%);
+      padding: 140px 0 60px;
+      text-align: center;
+      color: #fff;
+      border-bottom: 1px solid rgba(197, 160, 89, 0.15);
+    }
+    .viewer-hero h1 {
+      font-size: 2.8rem;
+      font-family: 'Outfit', 'Playfair Display', serif;
+      font-weight: 300;
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+    .viewer-hero em {
+      font-style: italic;
+      color: var(--gold);
+    }
+    .viewer-meta {
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+    }
+    .viewer-meta span {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .btn-download-pdf {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 10px 24px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+    .btn-download-pdf:hover {
+      background: var(--gold);
+      color: #1a1a1a;
+      box-shadow: 0 4px 15px rgba(197, 160, 89, 0.2);
+    }
+    .viewer-section {
+      padding: 60px 0 100px;
+      background: #fdfcf7;
+      min-height: 500px;
+    }
+    .breadcrumb {
+      margin-bottom: 30px;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .breadcrumb a {
+      color: var(--charcoal);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .breadcrumb a:hover {
+      color: var(--gold);
+    }
+    .breadcrumb span {
+      margin: 0 8px;
+      color: #ccc;
+    }
+    .pages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+    .page-card {
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .page-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    }
+    .page-img-container {
+      position: relative;
+      padding-top: 100px; /* Square/Landscape ratio backup */
+      height: 380px;
+      background: #f5f5f5;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .page-img-container img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #eaeae6;
+      transition: transform 0.5s ease;
+    }
+    .page-card:hover .page-img-container img {
+      transform: scale(1.03);
+    }
+    .page-card-body {
+      padding: 20px;
+      text-align: center;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .page-card-body h3 {
+      font-size: 1.1rem;
+      color: var(--charcoal);
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+    .page-inquire-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #25D366;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .page-inquire-btn:hover {
+      background: #20ba5a;
+      transform: scale(1.02);
+    }
+    /* Pagination Styles */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 40px;
+    }
+    .pagination-btn {
+      background: #fff;
+      border: 1px solid #ddd;
+      color: var(--charcoal);
+      padding: 10px 18px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+      text-decoration: none;
+    }
+    .pagination-btn:hover:not(.disabled) {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: #fffdf9;
+    }
+    .pagination-btn.disabled {
+      background: #f5f5f5;
+      color: #aaa;
+      border-color: #eee;
+      cursor: not-allowed;
+    }
+    .page-indicator {
+      font-size: 0.95rem;
+      color: #555;
+      font-weight: 500;
+      padding: 0 15px;
+    }
+    .no-catalog-view {
+      text-align: center;
+      padding: 100px 20px;
+    }
+    .no-catalog-view h2 {
+      font-size: 2rem;
+      color: var(--charcoal);
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAVBAR ─── -->
+<nav id="navbar" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo" id="nav-logo-link" aria-label="Rimal Italian Wall Covering Home">
+      <img src="images/logo.png" alt="Rimal Italian Wall Covering logo" class="nav-logo-img" />
+      <span class="nav-logo-text">Rimal Italian Wall Covering</span>
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a href="collections.html">Collections</a></li>
+      <li><a href="index.html#installation">Services</a></li>
+      <li><a href="index.html#inspiration">Inspiration</a></li>
+      <li><a href="index.html#testimonials">Stories</a></li>
+      <li><a href="index.html#consultation">Consultation</a></li>
+    </ul>
+    <div class="nav-ctas">
+      <a href="tel:+918089388796" class="nav-cta-call" id="nav-call-btn" aria-label="Call Rimal Italian Wall Covering">📞 Call</a>
+      <a href="https://wa.me/918089388796?text=Hi%20Rimal%20Italian%20Wall%20Covering%2C%20I%20would%20like%20to%20know%20more%20about%20your%20wallpapers." class="nav-cta-wa" id="nav-wa-btn" target="_blank" rel="noopener" aria-label="WhatsApp Rimal Italian Wall Covering"><i class="icon-wa icon-wa-mr"></i>WhatsApp</a>
+    </div>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="mobile-overlay" id="mobile-overlay" role="presentation"></div>
+<nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation">
+  <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close menu">✕</button>
+  <a href="collections.html" class="mobile-nav-link">Collections</a>
+  <a href="index.html#installation" class="mobile-nav-link">Services</a>
+  <a href="index.html#inspiration" class="mobile-nav-link">Inspiration</a>
+  <a href="index.html#testimonials" class="mobile-nav-link">Stories</a>
+  <a href="index.html#consultation" class="mobile-nav-link">Consultation</a>
+  <a href="tel:+918089388796" class="mobile-nav-link" style="color:var(--gold);">📞 Call Us</a>
+  <a href="https://wa.me/918089388796" target="_blank" class="mobile-nav-link" style="color:#25D366;"><i class="icon-wa icon-wa-mr"></i>WhatsApp</a>
+</nav>
+
+<!-- ─── DYNAMIC CONTENT ─── -->
+<div id="viewer-container">
+  <!-- Content will be injected by JavaScript -->
+  <div class="no-catalog-view">
+    <h2>Loading Catalog...</h2>
+  </div>
+</div>
+
+<!-- ─── FOOTER ─── -->
+<footer role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">
+          <img src="images/logo.png" alt="Rimal Italian Wall Covering logo" class="footer-logo-img" />
+          <span>Rimal Italian Wall Covering</span>
+        </div>
+        <p>Premium imported and custom wallpapers. Professional installation services across Kozhikode and surrounding areas in Kerala.</p>
+        <div class="footer-socials">
+          <a href="https://www.facebook.com/share/1CRMkiCiHw/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Follow Rimal Italian Wall Covering on Facebook">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
+              <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-links-group">
+        <h3>Collections</h3>
+        <ul>
+          <li><a href="collections.html?filter=floral">Floral & Botanical</a></li>
+          <li><a href="collections.html?filter=geometric">Geometric</a></li>
+          <li><a href="collections.html?filter=textured">Elegant Textures</a></li>
+          <li><a href="collections.html?filter=scenic">Scenic Murals</a></li>
+          <li><a href="collections.html?filter=catalogs">Design Catalogs</a></li>
+        </ul>
+      </div>
+      <div class="footer-links-group">
+        <h3>Company</h3>
+        <ul>
+          <li><a href="index.html#installation">Services</a></li>
+          <li><a href="index.html#inspiration">Inspiration</a></li>
+          <li><a href="index.html#testimonials">Customer Stories</a></li>
+          <li><a href="index.html#consultation">Book Consultation</a></li>
+        </ul>
+      </div>
+      <div class="footer-links-group">
+        <h3>Contact</h3>
+        <p style="color:rgba(255,255,255,0.7);font-size:0.9rem;line-height:1.6;margin-bottom:10px;">
+          📞 +91 8089388796<br>
+          ✉️ nisary4278@gmail.com
+        </p>
+        <p style="color:rgba(255,255,255,0.5);font-size:0.85rem;line-height:1.6;">
+          Kozhikode, Kerala
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Rimal Italian Wall Covering. All rights reserved. Kozhikode, Kerala.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Sticky Mobile Bar -->
+<div class="mobile-sticky-bar" role="toolbar" aria-label="Quick contact buttons">
+  <a href="tel:+918089388796" class="sticky-bar-btn sticky-bar-call" id="sticky-call"><i class="icon-phone"></i>Call Now</a>
+  <a href="https://wa.me/918089388796?text=Hi%20Rimal%20Italian%20Wall%20Covering%2C%20I%20would%20like%20to%20know%20more%20about%20your%20wallpapers." class="sticky-bar-btn sticky-bar-wa" target="_blank" rel="noopener" id="sticky-wa"><i class="icon-wa"></i>WhatsApp</a>
+</div>
+
+<!-- Load Metadata and Script -->
+<script src="js/catalogs_data.js"></script>
+<script>
+  // Mobile menu toggle
+  const hamburger = document.getElementById('nav-hamburger');
+  const mobileNav = document.getElementById('mobile-nav');
+  const mobileOverlay = document.getElementById('mobile-overlay');
+  const closeBtn = document.getElementById('mobile-nav-close');
+
+  function toggleMenu() {
+    const active = mobileNav.classList.toggle('active');
+    mobileOverlay.classList.toggle('active', active);
+    hamburger.setAttribute('aria-expanded', active ? 'true' : 'false');
+  }
+
+  hamburger.addEventListener('click', toggleMenu);
+  closeBtn.addEventListener('click', toggleMenu);
+  mobileOverlay.addEventListener('click', toggleMenu);
+
+  // Dynamic catalog parsing
+  const urlParams = new URLSearchParams(window.location.search);
+  const catalogId = urlParams.get('catalog');
+  const currentPage = parseInt(urlParams.get('page')) || 1;
+  const itemsPerPage = 12;
+
+  const container = document.getElementById('viewer-container');
+
+  if (!catalogId || !CATALOGS_DATA[catalogId]) {
+    container.innerHTML = `
+      <div class="no-catalog-view">
+        <div class="container">
+          <h2>Catalog Not Found</h2>
+          <p>Please return to the collections page and select a valid catalog.</p>
+          <a href="collections.html?filter=catalogs" class="btn btn-primary" style="margin-top:20px;display:inline-block;">Back to Catalogs</a>
+        </div>
+      </div>
+    `;
+  } else {
+    const catalog = CATALOGS_DATA[catalogId];
+    const totalPages = catalog.pages;
+    const totalPaginationPages = Math.ceil(totalPages / itemsPerPage);
+
+    // Render Hero and Structure
+    container.innerHTML = `
+      <section class="viewer-hero">
+        <div class="container">
+          <h1>${catalog.title}</h1>
+          <div class="viewer-meta">
+            <span>📚 ${totalPages} Pages</span>
+            <span>💾 ${catalog.size}</span>
+          </div>
+          <a href="${catalog.pdfPath}" class="btn-download-pdf" target="_blank" rel="noopener">
+            📥 Download Full PDF
+          </a>
+        </div>
+      </section>
+
+      <section class="viewer-section">
+        <div class="container">
+          <div class="breadcrumb">
+            <a href="index.html">Home</a><span>/</span>
+            <a href="collections.html?filter=catalogs">Catalogs</a><span>/</span>
+            <span style="color:var(--gold); font-weight:500;">${catalog.title}</span>
+          </div>
+
+          <div class="pages-grid" id="pages-grid">
+            <!-- Page cards will be rendered here -->
+          </div>
+
+          <div class="pagination" id="pagination-controls">
+            <!-- Controls will be rendered here -->
+          </div>
+        </div>
+      </section>
+    `;
+
+    renderPages(catalogId, catalog, currentPage);
+  }
+
+  function renderPages(id, catalog, page) {
+    const grid = document.getElementById('pages-grid');
+    grid.innerHTML = '';
+
+    const startIdx = (page - 1) * itemsPerPage;
+    const endIdx = Math.min(startIdx + itemsPerPage, catalog.pages);
+
+    for (let i = startIdx; i < endIdx; i++) {
+      const pageNum = i + 1;
+      const imageUrl = `images/catalogs/${id}/page_${pageNum}.jpg`;
+      const waText = encodeURIComponent(`Hi Rimal Italian Wall Covering, I am interested in Page ${pageNum} of the "${catalog.title}" catalog book.`);
+      const waUrl = `https://wa.me/918089388796?text=${waText}`;
+
+      const card = document.createElement('article');
+      card.className = 'page-card fade-up';
+      card.innerHTML = `
+        <div class="page-img-container">
+          <img src="${imageUrl}" alt="${catalog.title} - Page ${pageNum}" loading="lazy" />
+        </div>
+        <div class="page-card-body">
+          <h3>Page ${pageNum} of ${catalog.pages}</h3>
+          <a href="${waUrl}" target="_blank" rel="noopener" class="page-inquire-btn">
+            <i class="icon-wa icon-wa-mr"></i>Inquire on WhatsApp
+          </a>
+        </div>
+      `;
+      grid.appendChild(card);
+    }
+
+    renderPagination(id, page, Math.ceil(catalog.pages / itemsPerPage));
+  }
+
+  function renderPagination(id, current, total) {
+    const controls = document.getElementById('pagination-controls');
+    controls.innerHTML = '';
+
+    if (total <= 1) return;
+
+    // First & Prev Buttons
+    const firstBtn = document.createElement('a');
+    firstBtn.className = `pagination-btn ${current === 1 ? 'disabled' : ''}`;
+    firstBtn.textContent = '« First';
+    if (current > 1) firstBtn.href = `?catalog=${id}&page=1`;
+    controls.appendChild(firstBtn);
+
+    const prevBtn = document.createElement('a');
+    prevBtn.className = `pagination-btn ${current === 1 ? 'disabled' : ''}`;
+    prevBtn.textContent = '‹ Prev';
+    if (current > 1) prevBtn.href = `?catalog=${id}&page=${current - 1}`;
+    controls.appendChild(prevBtn);
+
+    // Indicator
+    const indicator = document.createElement('span');
+    indicator.className = 'page-indicator';
+    indicator.textContent = `Page ${current} of ${total}`;
+    controls.appendChild(indicator);
+
+    // Next & Last Buttons
+    const nextBtn = document.createElement('a');
+    nextBtn.className = `pagination-btn ${current === total ? 'disabled' : ''}`;
+    nextBtn.textContent = 'Next ›';
+    if (current < total) nextBtn.href = `?catalog=${id}&page=${current + 1}`;
+    controls.appendChild(nextBtn);
+
+    const lastBtn = document.createElement('a');
+    lastBtn.className = `pagination-btn ${current === total ? 'disabled' : ''}`;
+    lastBtn.textContent = 'Last »';
+    if (current < total) lastBtn.href = `?catalog=${id}&page=${total}`;
+    controls.appendChild(lastBtn);
+  }
+</script>
+</body>
+</html>
