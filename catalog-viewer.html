@@ -5,172 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Interactive Catalog Viewer — Rimal Italian Wall Covering</title>
   <meta name="description" content="Browse through our high-resolution design catalogs page by page. Find your favorite wallpaper patterns and inquire directly." />
-  <link rel="stylesheet" href="styles.css" />
+  
+  <!-- Use collections.css to inherit the complete premium design system and navbar styling -->
+  <link rel="stylesheet" href="collections.css" />
   
   <style>
-    /* Catalog Viewer Specific Premium Styling */
-    .viewer-hero {
-      background: linear-gradient(135deg, #161513 0%, #2a251e 100%);
-      padding: 140px 0 60px;
-      text-align: center;
-      color: #fff;
-      border-bottom: 1px solid rgba(197, 160, 89, 0.15);
-    }
-    .viewer-hero h1 {
-      font-size: 2.8rem;
-      font-family: 'Outfit', 'Playfair Display', serif;
-      font-weight: 300;
-      letter-spacing: -0.5px;
-      margin-bottom: 10px;
-      color: #fff;
-    }
-    .viewer-hero em {
-      font-style: italic;
-      color: var(--gold);
-    }
-    .viewer-meta {
-      font-size: 0.95rem;
-      color: rgba(255, 255, 255, 0.6);
-      margin-bottom: 25px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 15px;
-    }
-    .viewer-meta span {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 4px 12px;
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    .btn-download-pdf {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: transparent;
-      border: 1px solid var(--gold);
-      color: var(--gold);
-      padding: 10px 24px;
-      border-radius: 4px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      letter-spacing: 0.5px;
-      transition: all 0.3s ease;
-      text-decoration: none;
-    }
-    .btn-download-pdf:hover {
-      background: var(--gold);
-      color: #1a1a1a;
-      box-shadow: 0 4px 15px rgba(197, 160, 89, 0.2);
-    }
-    .viewer-section {
-      padding: 60px 0 100px;
-      background: #fdfcf7;
-      min-height: 500px;
-    }
-    .breadcrumb {
-      margin-bottom: 30px;
-      font-size: 0.9rem;
-      color: #666;
-    }
-    .breadcrumb a {
-      color: var(--charcoal);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-    .breadcrumb a:hover {
-      color: var(--gold);
-    }
-    .breadcrumb span {
-      margin: 0 8px;
-      color: #ccc;
-    }
-    .pages-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 30px;
-      margin-bottom: 50px;
-    }
-    .page-card {
-      background: #fff;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-      border: 1px solid rgba(0, 0, 0, 0.05);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      display: flex;
-      flex-direction: column;
-    }
-    .page-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
-    }
-    .page-img-container {
-      position: relative;
-      padding-top: 100px; /* Square/Landscape ratio backup */
-      height: 380px;
-      background: #f5f5f5;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .page-img-container img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      background: #eaeae6;
-      transition: transform 0.5s ease;
-    }
-    .page-card:hover .page-img-container img {
-      transform: scale(1.03);
-    }
-    .page-card-body {
-      padding: 20px;
-      text-align: center;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .page-card-body h3 {
-      font-size: 1.1rem;
-      color: var(--charcoal);
-      margin-bottom: 15px;
-      font-weight: 600;
-    }
-    .page-inquire-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      background: #25D366;
-      color: #fff;
-      padding: 10px 16px;
-      border-radius: 4px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      text-decoration: none;
-      transition: background 0.2s ease, transform 0.2s ease;
-    }
-    .page-inquire-btn:hover {
-      background: #20ba5a;
-      transform: scale(1.02);
-    }
     /* Pagination Styles */
     .pagination {
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 10px;
-      margin-top: 40px;
+      margin-top: 50px;
+      margin-bottom: 30px;
     }
     .pagination-btn {
       background: #fff;
-      border: 1px solid #ddd;
+      border: 1px solid #e2decb;
       color: var(--charcoal);
       padding: 10px 18px;
       border-radius: 4px;
@@ -184,28 +35,52 @@
     .pagination-btn:hover:not(.disabled) {
       border-color: var(--gold);
       color: var(--gold);
-      background: #fffdf9;
+      background: #fffdf5;
     }
     .pagination-btn.disabled {
-      background: #f5f5f5;
+      background: #f5f5ee;
       color: #aaa;
-      border-color: #eee;
+      border-color: #e2decb;
       cursor: not-allowed;
     }
     .page-indicator {
       font-size: 0.95rem;
-      color: #555;
+      color: var(--charcoal);
       font-weight: 500;
       padding: 0 15px;
     }
     .no-catalog-view {
       text-align: center;
-      padding: 100px 20px;
+      padding: 120px 20px;
     }
     .no-catalog-view h2 {
-      font-size: 2rem;
+      font-size: 2.2rem;
       color: var(--charcoal);
       margin-bottom: 20px;
+      font-family: var(--font-display);
+    }
+    /* Customize Inquire Button to stand out in green */
+    .product-card .product-inquire-wa {
+      background: #25D366;
+      border-color: #25D366;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-align: center;
+      padding: 12px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .product-card .product-inquire-wa:hover {
+      background: #20ba5a;
+      border-color: #20ba5a;
+      color: #fff;
+      transform: translateY(-2px);
     }
   </style>
 </head>
@@ -250,7 +125,6 @@
 
 <!-- ─── DYNAMIC CONTENT ─── -->
 <div id="viewer-container">
-  <!-- Content will be injected by JavaScript -->
   <div class="no-catalog-view">
     <h2>Loading Catalog...</h2>
   </div>
@@ -349,39 +223,36 @@
         <div class="container">
           <h2>Catalog Not Found</h2>
           <p>Please return to the collections page and select a valid catalog.</p>
-          <a href="collections.html?filter=catalogs" class="btn btn-primary" style="margin-top:20px;display:inline-block;">Back to Catalogs</a>
+          <a href="collections.html?filter=catalogs" class="btn btn-outline" style="margin-top:20px;display:inline-block;">Back to Catalogs</a>
         </div>
       </div>
     `;
   } else {
     const catalog = CATALOGS_DATA[catalogId];
     const totalPages = catalog.pages;
-    const totalPaginationPages = Math.ceil(totalPages / itemsPerPage);
 
-    // Render Hero and Structure
+    // Render page-hero and product grid structure matching collections.html
     container.innerHTML = `
-      <section class="viewer-hero">
-        <div class="container">
-          <h1>${catalog.title}</h1>
-          <div class="viewer-meta">
-            <span>📚 ${totalPages} Pages</span>
-            <span>💾 ${catalog.size}</span>
+      <section class="page-hero">
+        <div class="page-hero-img">
+          <img src="images/catalogs/${catalogId}_cover.png" alt="${catalog.title} background" style="filter: blur(10px) brightness(0.6); transform: scale(1.1);" onerror="this.src='images/cat-wallpapers.png'" />
+        </div>
+        <div class="page-hero-content">
+          <div class="breadcrumb">
+            <a href="index.html">Home</a> › <a href="collections.html?filter=catalogs">Catalogs</a> › <span>${catalog.title}</span>
           </div>
-          <a href="${catalog.pdfPath}" class="btn-download-pdf" target="_blank" rel="noopener">
-            📥 Download Full PDF
-          </a>
+          <h1>${catalog.title}</h1>
+          <p>
+            <a href="${catalog.pdfPath}" class="btn-download-pdf" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:8px; background:var(--gold); color:#1a1a1a; padding:10px 24px; border-radius:4px; font-size:0.9rem; font-weight:600; text-decoration:none; transition:all 0.3s ease; box-shadow:0 4px 15px rgba(197, 160, 89, 0.2); margin-top: 10px;">
+              📥 Download Full PDF (${catalog.size})
+            </a>
+          </p>
         </div>
       </section>
 
-      <section class="viewer-section">
+      <section class="products-section" style="padding: 60px 0 100px; background:#fdfcf7;">
         <div class="container">
-          <div class="breadcrumb">
-            <a href="index.html">Home</a><span>/</span>
-            <a href="collections.html?filter=catalogs">Catalogs</a><span>/</span>
-            <span style="color:var(--gold); font-weight:500;">${catalog.title}</span>
-          </div>
-
-          <div class="pages-grid" id="pages-grid">
+          <div class="products-grid" id="pages-grid">
             <!-- Page cards will be rendered here -->
           </div>
 
@@ -409,19 +280,24 @@
       const waUrl = `https://wa.me/918089388796?text=${waText}`;
 
       const card = document.createElement('article');
-      card.className = 'page-card fade-up';
+      card.className = 'product-card fade-up';
       card.innerHTML = `
-        <div class="page-img-container">
-          <img src="${imageUrl}" alt="${catalog.title} - Page ${pageNum}" loading="lazy" />
+        <div class="product-img" style="background:#eaeae6; height: 380px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+          <img src="${imageUrl}" alt="${catalog.title} - Page ${pageNum}" loading="lazy" style="width: 100%; height: 100%; object-fit: contain;" />
         </div>
-        <div class="page-card-body">
-          <h3>Page ${pageNum} of ${catalog.pages}</h3>
-          <a href="${waUrl}" target="_blank" rel="noopener" class="page-inquire-btn">
+        <div class="product-body" style="text-align: center; padding: 20px;">
+          <h3 style="font-size: 1.1rem; color: var(--charcoal); margin-bottom: 15px;">Page ${pageNum} of ${catalog.pages}</h3>
+          <a href="${waUrl}" target="_blank" rel="noopener" class="product-inquire-wa">
             <i class="icon-wa icon-wa-mr"></i>Inquire on WhatsApp
           </a>
         </div>
       `;
       grid.appendChild(card);
+
+      // Staggered reveal animation
+      setTimeout(() => {
+        card.classList.add('visible');
+      }, (i - startIdx) * 60);
     }
 
     renderPagination(id, page, Math.ceil(catalog.pages / itemsPerPage));
