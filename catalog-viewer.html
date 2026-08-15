@@ -228,6 +228,8 @@
     const grid = document.getElementById('pages-grid');
     grid.innerHTML = '';
 
+    const fragment = document.createDocumentFragment();
+
     for (let i = 0; i < catalog.pages; i++) {
       const pageNum = i + 1;
       const imageUrl = `images/catalogs/${id}/page_${pageNum}.jpg`;
@@ -247,8 +249,10 @@
           </a>
         </div>
       `;
-      grid.appendChild(card);
+      fragment.appendChild(card);
     }
+
+    grid.appendChild(fragment);
 
     // Scroll Observer for scroll animations
     const fadeEls = document.querySelectorAll('.fade-up');
