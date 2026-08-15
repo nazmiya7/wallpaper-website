@@ -10,45 +10,6 @@
   <link rel="stylesheet" href="collections.css" />
   
   <style>
-    /* Pagination Styles */
-    .pagination {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      margin-top: 50px;
-      margin-bottom: 30px;
-    }
-    .pagination-btn {
-      background: #fff;
-      border: 1px solid #e2decb;
-      color: var(--charcoal);
-      padding: 10px 18px;
-      border-radius: 4px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      user-select: none;
-      text-decoration: none;
-    }
-    .pagination-btn:hover:not(.disabled) {
-      border-color: var(--gold);
-      color: var(--gold);
-      background: #fffdf5;
-    }
-    .pagination-btn.disabled {
-      background: #f5f5ee;
-      color: #aaa;
-      border-color: #e2decb;
-      cursor: not-allowed;
-    }
-    .page-indicator {
-      font-size: 0.95rem;
-      color: var(--charcoal);
-      font-weight: 500;
-      padding: 0 15px;
-    }
     .no-catalog-view {
       text-align: center;
       padding: 120px 20px;
@@ -81,6 +42,36 @@
       border-color: #20ba5a;
       color: #fff;
       transform: translateY(-2px);
+    }
+    /* Back to Top Button */
+    #back-to-top {
+      position: fixed;
+      bottom: 90px;
+      right: 24px;
+      background: var(--gold);
+      color: #fff;
+      border: none;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      z-index: 999;
+    }
+    #back-to-top:hover {
+      background: var(--walnut);
+      transform: translateY(-2px);
+    }
+    #back-to-top.visible {
+      opacity: 1;
+      pointer-events: auto;
     }
   </style>
 </head>
@@ -190,6 +181,9 @@
   <a href="https://wa.me/918089388796?text=Hi%20Rimal%20Italian%20Wall%20Covering%2C%20I%20would%20like%20to%20know%20more%20about%20your%20wallpapers." class="sticky-bar-btn sticky-bar-wa" target="_blank" rel="noopener" id="sticky-wa"><i class="icon-wa"></i>WhatsApp</a>
 </div>
 
+<!-- Back to Top Button -->
+<button id="back-to-top" aria-label="Back to top">↑</button>
+
 <!-- Load Metadata and Script -->
 <script src="js/catalogs_data.js"></script>
 <script>
@@ -212,9 +206,6 @@
   // Dynamic catalog parsing
   const urlParams = new URLSearchParams(window.location.search);
   const catalogId = urlParams.get('catalog');
-  const currentPage = parseInt(urlParams.get('page')) || 1;
-  const itemsPerPage = 12;
-
   const container = document.getElementById('viewer-container');
 
   if (!catalogId || !CATALOGS_DATA[catalogId]) {
@@ -229,7 +220,6 @@
     `;
   } else {
     const catalog = CATALOGS_DATA[catalogId];
-    const totalPages = catalog.pages;
 
     // Render page-hero and product grid structure matching collections.html
     container.innerHTML = `
@@ -255,25 +245,18 @@
           <div class="products-grid" id="pages-grid">
             <!-- Page cards will be rendered here -->
           </div>
-
-          <div class="pagination" id="pagination-controls">
-            <!-- Controls will be rendered here -->
-          </div>
         </div>
       </section>
     `;
 
-    renderPages(catalogId, catalog, currentPage);
+    renderPages(catalogId, catalog);
   }
 
-  function renderPages(id, catalog, page) {
+  function renderPages(id, catalog) {
     const grid = document.getElementById('pages-grid');
     grid.innerHTML = '';
 
-    const startIdx = (page - 1) * itemsPerPage;
-    const endIdx = Math.min(startIdx + itemsPerPage, catalog.pages);
-
-    for (let i = startIdx; i < endIdx; i++) {
+    for (let i = 0; i < catalog.pages; i++) {
       const pageNum = i + 1;
       const imageUrl = `images/catalogs/${id}/page_${pageNum}.jpg`;
       const waText = encodeURIComponent(`Hi Rimal Italian Wall Covering, I am interested in Page ${pageNum} of the "${catalog.title}" catalog book.`);
@@ -293,54 +276,33 @@
         </div>
       `;
       grid.appendChild(card);
-
-      // Staggered reveal animation
-      setTimeout(() => {
-        card.classList.add('visible');
-      }, (i - startIdx) * 60);
     }
 
-    renderPagination(id, page, Math.ceil(catalog.pages / itemsPerPage));
+    // Scroll Observer for scroll animations
+    const fadeEls = document.querySelectorAll('.fade-up');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    fadeEls.forEach(el => observer.observe(el));
   }
 
-  function renderPagination(id, current, total) {
-    const controls = document.getElementById('pagination-controls');
-    controls.innerHTML = '';
-
-    if (total <= 1) return;
-
-    // First & Prev Buttons
-    const firstBtn = document.createElement('a');
-    firstBtn.className = `pagination-btn ${current === 1 ? 'disabled' : ''}`;
-    firstBtn.textContent = '« First';
-    if (current > 1) firstBtn.href = `?catalog=${id}&page=1`;
-    controls.appendChild(firstBtn);
-
-    const prevBtn = document.createElement('a');
-    prevBtn.className = `pagination-btn ${current === 1 ? 'disabled' : ''}`;
-    prevBtn.textContent = '‹ Prev';
-    if (current > 1) prevBtn.href = `?catalog=${id}&page=${current - 1}`;
-    controls.appendChild(prevBtn);
-
-    // Indicator
-    const indicator = document.createElement('span');
-    indicator.className = 'page-indicator';
-    indicator.textContent = `Page ${current} of ${total}`;
-    controls.appendChild(indicator);
-
-    // Next & Last Buttons
-    const nextBtn = document.createElement('a');
-    nextBtn.className = `pagination-btn ${current === total ? 'disabled' : ''}`;
-    nextBtn.textContent = 'Next ›';
-    if (current < total) nextBtn.href = `?catalog=${id}&page=${current + 1}`;
-    controls.appendChild(nextBtn);
-
-    const lastBtn = document.createElement('a');
-    lastBtn.className = `pagination-btn ${current === total ? 'disabled' : ''}`;
-    lastBtn.textContent = 'Last »';
-    if (current < total) lastBtn.href = `?catalog=${id}&page=${total}`;
-    controls.appendChild(lastBtn);
-  }
+  // Back to Top Button Logic
+  const backToTopBtn = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 600) {
+      backToTopBtn.classList.add('visible');
+    } else {
+      backToTopBtn.classList.remove('visible');
+    }
+  });
+  backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 </script>
 </body>
 </html>
