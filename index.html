@@ -147,45 +147,91 @@
   </div>
 </div>
 
-<!-- ─── CATEGORIES (WALLPAPER STYLES) ─── -->
+<!-- ─── CATEGORIES (DESIGN CATALOGS) ─── -->
 <section id="categories" aria-labelledby="categories-heading">
   <div class="container">
     <div class="section-heading fade-up">
-      <span class="label">Browse By Style</span>
-      <h2 id="categories-heading">Curated For Every Wall</h2>
-      <p>From subtle textures to bold botanical designs — discover wallpapers that elevate your home.</p>
+      <span class="label">Our Collections</span>
+      <h2 id="categories-heading">Premium Design Books</h2>
+      <p>Browse through our high-resolution design catalogs page by page to find your perfect wallpaper.</p>
     </div>
-    <div class="categories-grid">
-      <a href="collections.html?filter=floral" class="cat-card fade-up fade-up-d1" id="cat-floral" aria-label="Browse Floral Wallpapers">
-        <img src="images/cat-wallpapers.png" alt="Floral & Botanical Wallpapers" loading="lazy" />
-        <div class="cat-card-overlay"></div>
+    <div class="filter-tabs" style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px;">
+      <button class="filter-btn active" data-filter="all" style="padding: 8px 20px; border-radius: 20px; border: 1px solid var(--border); background: var(--gold); color: #fff; cursor: pointer; font-weight: 500; font-size: 14px; transition: all 0.3s ease;">All Styles</button>
+      <button class="filter-btn" data-filter="luxury" style="padding: 8px 20px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--charcoal); cursor: pointer; font-weight: 500; font-size: 14px; transition: all 0.3s ease;">Luxury</button>
+      <button class="filter-btn" data-filter="budget" style="padding: 8px 20px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--charcoal); cursor: pointer; font-weight: 500; font-size: 14px; transition: all 0.3s ease;">Budget-Friendly</button>
+      <button class="filter-btn" data-filter="wallcovering" style="padding: 8px 20px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--charcoal); cursor: pointer; font-weight: 500; font-size: 14px; transition: all 0.3s ease;">Wallcovering</button>
+    </div>
+    <div class="categories-grid" id="homepage-cat-grid">
+      <a href="catalog-viewer.html?catalog=rimona_pdf" class="cat-card fade-up fade-up-d1" id="cat-rimona" aria-label="Browse Rimona Luxury Collection" data-category="luxury">
+        <div class="cat-card-img-wrapper">
+          <img src="images/catalogs/rimona_pdf_cover.png" alt="Rimona Luxury Collection Cover" loading="lazy" />
+        </div>
         <div class="cat-card-body">
-          <h3>Floral & Botanical</h3>
-          <span>View Style</span>
+          <h3>Rimona Luxury</h3>
+          <span>View Catalog</span>
         </div>
       </a>
-      <a href="collections.html?filter=geometric" class="cat-card fade-up fade-up-d2" id="cat-geometric" aria-label="Browse Geometric Wallpapers">
-        <img src="images/col-minimalist.png" alt="Modern & Geometric Wallpapers" loading="lazy" />
-        <div class="cat-card-overlay"></div>
+      <a href="catalog-viewer.html?catalog=aura_design" class="cat-card fade-up fade-up-d2" id="cat-aura" aria-label="Browse Aura Design Book" data-category="luxury">
+        <div class="cat-card-img-wrapper">
+          <img src="images/catalogs/aura_design_cover.png" alt="Aura Design Book Cover" loading="lazy" />
+        </div>
         <div class="cat-card-body">
-          <h3>Modern & Geometric</h3>
-          <span>View Style</span>
+          <h3>Aura Design Book</h3>
+          <span>View Catalog</span>
         </div>
       </a>
-      <a href="collections.html?filter=textured" class="cat-card fade-up fade-up-d3" id="cat-textured" aria-label="Browse Textured Wallpapers">
-        <img src="images/cat-textures.png" alt="Elegant Textured Wallpapers" loading="lazy" />
-        <div class="cat-card-overlay"></div>
+      <a href="catalog-viewer.html?catalog=malacca_n" class="cat-card fade-up fade-up-d3" id="cat-malacca" aria-label="Browse Malacca Premium Collection" data-category="luxury">
+        <div class="cat-card-img-wrapper">
+          <img src="images/catalogs/malacca_n_cover.png" alt="Malacca Premium Collection Cover" loading="lazy" />
+        </div>
         <div class="cat-card-body">
-          <h3>Elegant Textures</h3>
-          <span>View Style</span>
+          <h3>Malacca Premium</h3>
+          <span>View Catalog</span>
         </div>
       </a>
-      <a href="collections.html?filter=scenic" class="cat-card fade-up fade-up-d4" id="cat-scenic" aria-label="Browse Scenic Murals">
-        <img src="images/inspo-bedroom.png" alt="Custom Scenic Wall Murals" loading="lazy" />
-        <div class="cat-card-overlay"></div>
+      <a href="catalog-viewer.html?catalog=adams_rimal" class="cat-card fade-up fade-up-d4" id="cat-adams" aria-label="Browse Adams Rimal Collection" data-category="luxury">
+        <div class="cat-card-img-wrapper">
+          <img src="images/catalogs/adams_rimal_cover.png" alt="Adams Rimal Collection Cover" loading="lazy" />
+        </div>
         <div class="cat-card-body">
-          <h3>Scenic & Murals</h3>
-          <span>View Style</span>
+          <h3>Adams Rimal</h3>
+          <span>View Catalog</span>
+        </div>
+      </a>
+      <a href="catalog-viewer.html?catalog=rimal_emaar_n" class="cat-card fade-up fade-up-d5" id="cat-emaar" aria-label="Browse Emaar Premium Selection" data-category="luxury">
+        <div class="cat-card-img-wrapper">
+          <img src="images/catalogs/rimal_emaar_n_cover.png" alt="Emaar Premium Selection Cover" loading="lazy" />
+        </div>
+        <div class="cat-card-body">
+          <h3>Emaar Premium</h3>
+          <span>View Catalog</span>
+        </div>
+      </a>
+      <a href="catalog-viewer.html?catalog=rimal_wallcovering_n" class="cat-card fade-up fade-up-d6" id="cat-wallcovering" aria-label="Browse Rimal Italian Wallcovering" data-category="wallcovering">
+        <div class="cat-card-img-wrapper">
+          <img src="images/catalogs/rimal_wallcovering_n_cover.png" alt="Rimal Italian Wallcovering Cover" loading="lazy" />
+        </div>
+        <div class="cat-card-body">
+          <h3>Italian Wallcovering</h3>
+          <span>View Catalog</span>
+        </div>
+      </a>
+      <a href="catalog-viewer.html?catalog=rimal_budget_collection_n" class="cat-card fade-up fade-up-d7" id="cat-budget" aria-label="Browse Rimal Budget Collection" data-category="budget">
+        <div class="cat-card-img-wrapper">
+          <img src="images/catalogs/rimal_budget_collection_n_cover.png" alt="Rimal Budget Collection Cover" loading="lazy" />
+        </div>
+        <div class="cat-card-body">
+          <h3>Budget Collection</h3>
+          <span>View Catalog</span>
+        </div>
+      </a>
+      <a href="catalog-viewer.html?catalog=Screenshot_2025-07-02_at_9.05.17_PM" class="cat-card fade-up fade-up-d8" id="cat-portfolio" aria-label="Browse Special Design Portfolio" data-category="wallcovering">
+        <div class="cat-card-img-wrapper">
+          <img src="images/catalogs/Screenshot_2025-07-02_at_9.05.17_PM_cover.png" alt="Special Design Portfolio Cover" loading="lazy" />
+        </div>
+        <div class="cat-card-body">
+          <h3>Design Portfolio</h3>
+          <span>View Catalog</span>
         </div>
       </a>
     </div>
@@ -459,19 +505,19 @@
       <div class="footer-col">
         <h4>Explore</h4>
         <ul>
-          <li><a href="#categories">All Styles</a></li>
+          <li><a href="#categories">Design Books</a></li>
           <li><a href="#collections">Themes</a></li>
           <li><a href="#new-arrivals">New Arrivals</a></li>
           <li><a href="#inspiration">Inspiration</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Wallpaper Styles</h4>
+        <h4>Top Catalogs</h4>
         <ul>
-          <li><a href="collections.html?filter=floral">Floral & Botanical</a></li>
-          <li><a href="collections.html?filter=geometric">Modern & Geometric</a></li>
-          <li><a href="collections.html?filter=textured">Elegant Textures</a></li>
-          <li><a href="collections.html?filter=scenic">Scenic & Murals</a></li>
+          <li><a href="catalog-viewer.html?catalog=rimona_pdf">Rimona Luxury</a></li>
+          <li><a href="catalog-viewer.html?catalog=aura_design">Aura Design</a></li>
+          <li><a href="catalog-viewer.html?catalog=malacca_n">Malacca Premium</a></li>
+          <li><a href="catalog-viewer.html?catalog=adams_rimal">Adams Rimal</a></li>
         </ul>
       </div>
       <div class="footer-col footer-contact">
@@ -508,6 +554,39 @@
   </div>
 </div>
 
+<script>
+  // Filter tabs logic for homepage
+  document.addEventListener('DOMContentLoaded', () => {
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const catCards = document.querySelectorAll('#homepage-cat-grid .cat-card');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Remove active class from all buttons
+        filterBtns.forEach(b => {
+          b.classList.remove('active');
+          b.style.background = 'transparent';
+          b.style.color = 'var(--charcoal)';
+        });
+        
+        // Add active class to clicked button
+        btn.classList.add('active');
+        btn.style.background = 'var(--gold)';
+        btn.style.color = '#fff';
+
+        const filter = btn.getAttribute('data-filter');
+
+        catCards.forEach(card => {
+          if (filter === 'all' || card.getAttribute('data-category') === filter) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+  });
+</script>
 <script src="script.js" defer></script>
 </body>
 </html>
