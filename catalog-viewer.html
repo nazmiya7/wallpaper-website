@@ -8,6 +8,7 @@
   
   <!-- Use collections.css to inherit the complete premium design system and navbar styling -->
   <link rel="stylesheet" href="collections.css" />
+<script src="js/section_pages.js?v=7"></script>
   
   <style>
     .no-catalog-view {
@@ -291,8 +292,8 @@
 </div>
 
 <!-- Load Metadata and Script -->
-<script src="js/catalogs_data.js"></script>
-<script src="js/page_metadata.js"></script>
+<script src="js/catalogs_data.js?v=2"></script>
+<script src="js/page_metadata.js?v=2"></script>
 <script>
   // Mobile menu toggle
   const hamburger = document.getElementById('nav-hamburger');
@@ -388,8 +389,9 @@
       const pageLabel = `Page ${pno || displayNum}`;
       const fullLabel = code ? `${code}` : pageLabel;
       
-      // Direct link to this specific page on the site
-      const pageUrl = window.location.origin + window.location.pathname + `?catalog=${id}#page-${displayNum}`;
+      // Direct link to this specific page on the site (use PDF page number if we have it)
+      const anchorPage = pno || displayNum;
+      const pageUrl = window.location.origin + window.location.pathname + `?catalog=${id}#page-${anchorPage}`;
       const waText = encodeURIComponent(`Hi Rimal Italian Wall Covering, I'm interested in this wallpaper:\n\n${code ? code + '\n' : ''}${pageLabel} — ${catalog.title}\n\nSee: ${pageUrl}`);
       const waUrl = `https://wa.me/918089388796?text=${waText}`;
 
@@ -397,7 +399,17 @@
       card.className = 'product-card fade-up';
       card.id = `page-${displayNum}`;
 
-      if (hasRichMeta && !code) {
+      // Determine if this page should be a full‑width section/banner
+      let isSection = false;
+      if (SECTION_PAGES && SECTION_PAGES[id]) {
+        // If explicitly configured, strictly follow the configuration
+        isSection = SECTION_PAGES[id].includes(displayNum);
+      } else {
+        // Fallback: if no config exists, assume pages without codes in a rich catalog are sections
+        isSection = hasRichMeta && !code;
+      }
+      
+      if (isSection) {
         // Section / room scene page — spans full width as a section divider (no page number shown)
         card.className = 'product-card fade-up room-scene-card';
         card.style.cssText = 'grid-column: 1 / -1; display: flex; flex-direction: row; overflow: hidden; border-radius: var(--radius); border: 1px solid var(--border); background: #f9f8f5;';
