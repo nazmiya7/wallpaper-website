@@ -8,7 +8,7 @@
   
   <!-- Use collections.css to inherit the complete premium design system and navbar styling -->
   <link rel="stylesheet" href="collections.css" />
-<script src="js/section_pages.js?v=7"></script>
+<script src="js/section_pages.js?v=23"></script>
   
   <style>
     .no-catalog-view {
@@ -292,8 +292,8 @@
 </div>
 
 <!-- Load Metadata and Script -->
-<script src="js/catalogs_data.js?v=2"></script>
-<script src="js/page_metadata.js?v=2"></script>
+<script src="js/catalogs_data.js?v=14"></script>
+<script src="js/page_metadata.js?v=14"></script>
 <script>
   // Mobile menu toggle
   const hamburger = document.getElementById('nav-hamburger');
@@ -366,10 +366,19 @@
 
     const fragment = document.createDocumentFragment();
 
-    for (let i = 1; i < catalog.pages; i++) {
-      const fileNum = i + 1;
-      const displayNum = i;
-      const totalDisplayPages = catalog.pages - 1;
+    // Determine the sequence of file numbers to render
+    let fileNumbers = [];
+    if (typeof CUSTOM_PAGE_ORDER !== 'undefined' && CUSTOM_PAGE_ORDER[id]) {
+      fileNumbers = CUSTOM_PAGE_ORDER[id];
+    } else {
+      for (let i = 1; i < catalog.pages; i++) {
+        fileNumbers.push(i + 1);
+      }
+    }
+
+    for (let index = 0; index < fileNumbers.length; index++) {
+      const fileNum = fileNumbers[index];
+      const displayNum = index + 1;
       
       const imageUrl = `images/catalogs/${id}/page_${fileNum}.jpg`;
       
@@ -397,13 +406,13 @@
 
       const card = document.createElement('article');
       card.className = 'product-card fade-up';
-      card.id = `page-${displayNum}`;
+      card.id = `page-${anchorPage}`;
 
       // Determine if this page should be a full‑width section/banner
       let isSection = false;
       if (SECTION_PAGES && SECTION_PAGES[id]) {
-        // If explicitly configured, strictly follow the configuration
-        isSection = SECTION_PAGES[id].includes(displayNum);
+        // If explicitly configured, strictly follow the configuration using fileNum
+        isSection = SECTION_PAGES[id].includes(fileNum);
       } else {
         // Fallback: if no config exists, assume pages without codes in a rich catalog are sections
         isSection = hasRichMeta && !code;
