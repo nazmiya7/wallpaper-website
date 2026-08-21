@@ -8,7 +8,7 @@
   
   <!-- Use collections.css to inherit the complete premium design system and navbar styling -->
   <link rel="stylesheet" href="collections.css" />
-<script src="js/section_pages.js?v=23"></script>
+<script src="js/section_pages.js?v=25"></script>
   
   <style>
     .no-catalog-view {
@@ -195,6 +195,52 @@
       border-color: #20ba5a;
       transform: translateY(-2px);
     }
+
+    /* Style for inner product grid and cards inside section */
+    .room-scene-card {
+      box-shadow: var(--shadow-sm);
+    }
+    .inner-products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 16px;
+      width: 100%;
+    }
+    .inner-product-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .inner-product-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .inner-product-card img {
+      transition: transform 0.3s ease;
+    }
+    .inner-product-card:hover img {
+      transform: scale(1.05);
+    }
+    /* Responsive adjustment for room scene cards */
+    @media (max-width: 900px) {
+      .room-scene-card {
+        flex-direction: column !important;
+      }
+      .room-scene-card > div:first-child {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        aspect-ratio: 16 / 10;
+      }
+      .room-scene-card > div:last-child {
+        border-left: none !important;
+        border-top: 1px solid var(--border);
+      }
+    }
   </style>
 </head>
 <body>
@@ -293,7 +339,7 @@
 
 <!-- Load Metadata and Script -->
 <script src="js/catalogs_data.js?v=14"></script>
-<script src="js/page_metadata.js?v=14"></script>
+<script src="js/page_metadata.js?v=15"></script>
 <script>
   // Mobile menu toggle
   const hamburger = document.getElementById('nav-hamburger');
@@ -366,39 +412,19 @@
 
     const fragment = document.createDocumentFragment();
 
-    // Determine the sequence of file numbers to render
-    let fileNumbers = [];
-    if (typeof CUSTOM_PAGE_ORDER !== 'undefined' && CUSTOM_PAGE_ORDER[id]) {
-      fileNumbers = CUSTOM_PAGE_ORDER[id];
-    } else {
-      for (let i = 1; i < catalog.pages; i++) {
-        fileNumbers.push(i + 1);
-      }
-    }
+    const catMetaAll = (typeof PAGE_METADATA !== 'undefined' && PAGE_METADATA[id]) ? PAGE_METADATA[id] : {};
 
-    for (let index = 0; index < fileNumbers.length; index++) {
-      const fileNum = fileNumbers[index];
-      const displayNum = index + 1;
-      
+    // Helper to create normal product card
+    function createNormalCard(fileNum) {
+      const displayNum = fileNum;
       const imageUrl = `images/catalogs/${id}/page_${fileNum}.jpg`;
-      
-      // Detect if this catalog has rich metadata (many pages with codes)
-      // If not, treat ALL pages uniformly (e.g. Rimona where LP is image-embedded)
-      const catMetaAll = (typeof PAGE_METADATA !== 'undefined' && PAGE_METADATA[id]) ? PAGE_METADATA[id] : {};
-      const pagesWithCode = Object.values(catMetaAll).filter(m => m && m.code).length;
-      const hasRichMeta = (catalog.pages > 0) && (pagesWithCode / catalog.pages > 0.4);
-
-      // Look up code/LP number from metadata
       const pageMeta = catMetaAll[fileNum];
-      // Format code with space: LP261709 → LP 261709, M3025 → M 3025
       let rawCode = pageMeta && pageMeta.code ? pageMeta.code : null;
       const code = rawCode ? rawCode.replace(/^([A-Za-z]+)(\d)/, '$1 $2') : null;
-      // Use PDF page number (pno) when available, otherwise fall back to sequential displayNum
       const pno = pageMeta && pageMeta.pno ? pageMeta.pno : null;
       const pageLabel = `Page ${pno || displayNum}`;
       const fullLabel = code ? `${code}` : pageLabel;
-      
-      // Direct link to this specific page on the site (use PDF page number if we have it)
+
       const anchorPage = pno || displayNum;
       const pageUrl = window.location.origin + window.location.pathname + `?catalog=${id}#page-${anchorPage}`;
       const waText = encodeURIComponent(`Hi Rimal Italian Wall Covering, I'm interested in this wallpaper:\n\n${code ? code + '\n' : ''}${pageLabel} — ${catalog.title}\n\nSee: ${pageUrl}`);
@@ -407,80 +433,240 @@
       const card = document.createElement('article');
       card.className = 'product-card fade-up';
       card.id = `page-${anchorPage}`;
+      card.innerHTML = `
+        <div class="product-img" style="aspect-ratio: auto !important; position: relative; overflow: hidden; background: #fff; border-bottom: 1px solid var(--border);">
+          <img src="${imageUrl}" alt="${catalog.title} - ${fullLabel}" loading="lazy" style="width: 100%; height: auto; display: block;" />
+        </div>
+        <div class="product-body" style="text-align: center; padding: 16px 20px;">
+          ${code ? `<p style="font-size: 1.05rem; font-weight: 700; color: var(--walnut); margin-bottom: 3px; letter-spacing: 0.5px;">${code}</p>` : ''}
+          <h3 style="font-size: 0.82rem; color: #bbb; margin-bottom: 14px; font-weight: 400;">${pageLabel}</h3>
+          <a href="${waUrl}" target="_blank" rel="noopener" class="product-inquire-wa">
+            <i class="icon-wa icon-wa-mr"></i>Inquire on WhatsApp
+          </a>
+        </div>
+      `;
 
-      // Determine if this page should be a full‑width section/banner
-      let isSection = false;
-      if (SECTION_PAGES && SECTION_PAGES[id]) {
-        // If explicitly configured, strictly follow the configuration using fileNum
-        isSection = SECTION_PAGES[id].includes(fileNum);
-      } else {
-        // Fallback: if no config exists, assume pages without codes in a rich catalog are sections
-        isSection = hasRichMeta && !code;
-      }
-      
-      if (isSection) {
-        // Section / room scene page — spans full width as a section divider (no page number shown)
-        card.className = 'product-card fade-up room-scene-card';
-        card.style.cssText = 'grid-column: 1 / -1; display: flex; flex-direction: row; overflow: hidden; border-radius: var(--radius); border: 1px solid var(--border); background: #f9f8f5;';
-        card.innerHTML = `
-          <div style="flex: 0 0 55%; max-width: 55%; overflow: hidden; position: relative;">
-            <img src="${imageUrl}" alt="${catalog.title} - Interior Showcase" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
-            <div style="position:absolute;top:14px;left:14px;background:rgba(0,0,0,0.5);color:#fff;font-size:10px;font-weight:600;letter-spacing:2px;padding:4px 10px;border-radius:3px;text-transform:uppercase;">Room Scene</div>
-          </div>
-          <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 32px 40px; background: #f9f8f5;">
-            <p style="font-size: 10px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px;">Interior Showcase</p>
-            <h3 style="font-family: var(--font-display); font-size: 1.6rem; font-weight: 400; color: var(--walnut); line-height: 1.3; margin-bottom: 10px;">${catalog.title}</h3>
-            <p style="font-size: 0.85rem; color: #999;">See how our designs look in a real interior setting.</p>
-          </div>
-        `;
-      } else {
-        // Uniform product card (works for both Rimona-style and Aura-style product pages)
-        card.innerHTML = `
-          <div class="product-img" style="aspect-ratio: auto !important; position: relative; overflow: hidden; background: #fff; border-bottom: 1px solid var(--border);">
-            <img src="${imageUrl}" alt="${catalog.title} - ${fullLabel}" loading="lazy" style="width: 100%; height: auto; display: block;" />
-          </div>
-          <div class="product-body" style="text-align: center; padding: 16px 20px;">
-            ${code ? `<p style="font-size: 1.05rem; font-weight: 700; color: var(--walnut); margin-bottom: 3px; letter-spacing: 0.5px;">${code}</p>` : ''}
-            <h3 style="font-size: 0.82rem; color: #bbb; margin-bottom: 14px; font-weight: 400;">${pageLabel}</h3>
-            <a href="${waUrl}" target="_blank" rel="noopener" class="product-inquire-wa">
-              <i class="icon-wa icon-wa-mr"></i>Inquire on WhatsApp
-            </a>
-          </div>
-        `;
-      }
       card.addEventListener('click', (e) => {
-        // Room scene banners are not products — skip lightbox
-        if (card.classList.contains('room-scene-card')) return;
         if (e.target.closest('.product-inquire-wa')) return;
         openLightbox(imageUrl, fullLabel, waUrl);
       });
 
-      fragment.appendChild(card);
+      return card;
     }
 
-    grid.appendChild(fragment);
+    // Helper to create inner compact product card
+    function createInnerProductCard(fileNum) {
+      const displayNum = fileNum;
+      const imageUrl = `images/catalogs/${id}/page_${fileNum}.jpg`;
+      const pageMeta = catMetaAll[fileNum];
+      let rawCode = pageMeta && pageMeta.code ? pageMeta.code : null;
+      const code = rawCode ? rawCode.replace(/^([A-Za-z]+)(\d)/, '$1 $2') : null;
+      const pno = pageMeta && pageMeta.pno ? pageMeta.pno : null;
+      const pageLabel = `Page ${pno || displayNum}`;
+      const fullLabel = code ? `${code}` : pageLabel;
 
-    // Scroll Observer for scroll animations
-    const fadeEls = document.querySelectorAll('.fade-up');
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          observer.unobserve(e.target);
+      const anchorPage = pno || displayNum;
+      const pageUrl = window.location.origin + window.location.pathname + `?catalog=${id}#page-${anchorPage}`;
+      const waText = encodeURIComponent(`Hi Rimal Italian Wall Covering, I'm interested in this wallpaper:\n\n${code ? code + '\n' : ''}${pageLabel} — ${catalog.title}\n\nSee: ${pageUrl}`);
+      const waUrl = `https://wa.me/918089388796?text=${waText}`;
+
+      const card = document.createElement('div');
+      card.className = 'inner-product-card';
+      card.id = `page-${anchorPage}`;
+      card.innerHTML = `
+        <div style="position: relative; overflow: hidden; aspect-ratio: 1 / 1; border-bottom: 1px solid var(--border);">
+          <img src="${imageUrl}" alt="${fullLabel}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+        </div>
+        <div style="padding: 10px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; flex: 1;">
+          <div>
+            ${code ? `<p style="font-size: 0.85rem; font-weight: 700; color: var(--walnut); margin: 0 0 2px 0; letter-spacing: 0.5px;">${code}</p>` : ''}
+            <p style="font-size: 0.72rem; color: #999; margin: 0 0 8px 0;">${pageLabel}</p>
+          </div>
+          <a href="${waUrl}" target="_blank" rel="noopener" class="product-inquire-wa" style="font-size: 11px; padding: 6px 8px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; gap: 4px; background: #25D366; color: #fff; text-decoration: none; font-weight: 500; border: 1px solid #25D366;">
+            <i class="icon-wa" style="width: 12px; height: 12px; display: inline-block; background-size: contain; background-repeat: no-repeat; margin-right: 2px;"></i> WhatsApp
+          </a>
+        </div>
+      `;
+
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('.product-inquire-wa')) return;
+        openLightbox(imageUrl, fullLabel, waUrl);
+      });
+
+      return card;
+    }
+
+    function setupAnimations() {
+      const fadeEls = document.querySelectorAll('.fade-up');
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            observer.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      fadeEls.forEach(el => observer.observe(el));
+
+      // Auto-open lightbox if URL contains a page hash (e.g. #page-2)
+      if (window.location.hash && window.location.hash.startsWith('#page-')) {
+        setTimeout(() => {
+          const targetCard = document.querySelector(window.location.hash);
+          if (targetCard) {
+            targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            targetCard.click();
+          }
+        }, 300);
+      }
+    }
+
+    if (id === 'rimal_wallcovering_n') {
+      // Different approach ONLY for Rimal Italian Wallcovering
+      const groups = [
+        { type: "products", items: [2, 3] },
+        { type: "section", roomScene: 4, items: [] },
+        { type: "section", roomScene: 5, items: [6] },
+        { type: "section", roomScene: 8, items: [7, 9, 10] },
+        { type: "section", roomScene: 11, items: [12] },
+        { type: "products", items: [13, 14, 15] },
+        { type: "section", roomScene: 16, items: [17, 18] },
+        { type: "section", roomScene: 19, items: [20] },
+        { type: "products", items: [21, 22, 23, 24] },
+        { type: "section", roomScene: 25, items: [26] },
+        { type: "products", items: [27, 28] },
+        { type: "section", roomScene: 29, items: [30] },
+        { type: "products", items: [31, 32, 33] }
+      ];
+
+      groups.forEach((group) => {
+        if (group.type === "products") {
+          group.items.forEach(fileNum => {
+            const card = createNormalCard(fileNum);
+            fragment.appendChild(card);
+          });
+        } else if (group.type === "section") {
+          const card = document.createElement('article');
+          card.className = 'product-card fade-up room-scene-card';
+          card.id = `page-room-${group.roomScene}`;
+          card.style.cssText = 'grid-column: 1 / -1; display: flex; flex-direction: row; overflow: hidden; border-radius: var(--radius); border: 1px solid var(--border); background: #f9f8f5;';
+          
+          const roomSceneImageUrl = `images/catalogs/${id}/page_${group.roomScene}.jpg`;
+
+          if (group.items.length === 0) {
+            card.innerHTML = `
+              <div style="flex: 0 0 50%; max-width: 50%; overflow: hidden; position: relative;">
+                <img src="${roomSceneImageUrl}" alt="${catalog.title} - Interior Showcase" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+                <div style="position:absolute;top:14px;left:14px;background:rgba(0,0,0,0.5);color:#fff;font-size:10px;font-weight:600;letter-spacing:2px;padding:4px 10px;border-radius:3px;text-transform:uppercase;">Room Scene</div>
+              </div>
+              <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 32px 40px; background: #f9f8f5; border-left: 1px solid var(--border);">
+                <p style="font-size: 10px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px;">Interior Showcase</p>
+                <h3 style="font-family: var(--font-display); font-size: 1.6rem; font-weight: 400; color: var(--walnut); line-height: 1.3; margin-bottom: 10px;">${catalog.title}</h3>
+                <p style="font-size: 0.85rem; color: #999;">See how our designs look in a real interior setting.</p>
+              </div>
+            `;
+          } else {
+            card.innerHTML = `
+              <div style="flex: 0 0 50%; max-width: 50%; overflow: hidden; position: relative;">
+                <img src="${roomSceneImageUrl}" alt="${catalog.title} - Interior Showcase" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+                <div style="position:absolute;top:14px;left:14px;background:rgba(0,0,0,0.5);color:#fff;font-size:10px;font-weight:600;letter-spacing:2px;padding:4px 10px;border-radius:3px;text-transform:uppercase;">Room Scene</div>
+              </div>
+              <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 24px; background: #f9f8f5; border-left: 1px solid var(--border);">
+                <p style="font-size: 10px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; margin-top: 0;">Featured Designs</p>
+                <div class="inner-products-grid"></div>
+              </div>
+            `;
+            const innerGrid = card.querySelector('.inner-products-grid');
+            group.items.forEach(fileNum => {
+              const itemCard = createInnerProductCard(fileNum);
+              innerGrid.appendChild(itemCard);
+            });
+          }
+          fragment.appendChild(card);
         }
       });
-    }, { threshold: 0.1 });
-    fadeEls.forEach(el => observer.observe(el));
 
-    // Auto-open lightbox if URL contains a page hash (e.g. #page-2)
-    if (window.location.hash && window.location.hash.startsWith('#page-')) {
-      setTimeout(() => {
-        const targetCard = document.querySelector(window.location.hash);
-        if (targetCard) {
-          targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          targetCard.click();
+      grid.appendChild(fragment);
+      setupAnimations();
+    } else {
+      // Normal/Fallback logic for other catalogs
+      let fileNumbers = [];
+      if (typeof CUSTOM_PAGE_ORDER !== 'undefined' && CUSTOM_PAGE_ORDER[id]) {
+        fileNumbers = CUSTOM_PAGE_ORDER[id];
+      } else {
+        for (let i = 1; i < catalog.pages; i++) {
+          fileNumbers.push(i + 1);
         }
-      }, 300);
+      }
+
+      for (let index = 0; index < fileNumbers.length; index++) {
+        const fileNum = fileNumbers[index];
+        const displayNum = index + 1;
+        const imageUrl = `images/catalogs/${id}/page_${fileNum}.jpg`;
+        const pagesWithCode = Object.values(catMetaAll).filter(m => m && m.code).length;
+        const hasRichMeta = (catalog.pages > 0) && (pagesWithCode / catalog.pages > 0.4);
+        const pageMeta = catMetaAll[fileNum];
+        let rawCode = pageMeta && pageMeta.code ? pageMeta.code : null;
+        const code = rawCode ? rawCode.replace(/^([A-Za-z]+)(\d)/, '$1 $2') : null;
+        const pno = pageMeta && pageMeta.pno ? pageMeta.pno : null;
+        const pageLabel = `Page ${pno || displayNum}`;
+        const fullLabel = code ? `${code}` : pageLabel;
+
+        const anchorPage = pno || displayNum;
+        const pageUrl = window.location.origin + window.location.pathname + `?catalog=${id}#page-${anchorPage}`;
+        const waText = encodeURIComponent(`Hi Rimal Italian Wall Covering, I'm interested in this wallpaper:\n\n${code ? code + '\n' : ''}${pageLabel} — ${catalog.title}\n\nSee: ${pageUrl}`);
+        const waUrl = `https://wa.me/918089388796?text=${waText}`;
+
+        const card = document.createElement('article');
+        card.className = 'product-card fade-up';
+        card.id = `page-${anchorPage}`;
+
+        let isSection = false;
+        if (SECTION_PAGES && SECTION_PAGES[id]) {
+          isSection = SECTION_PAGES[id].includes(fileNum);
+        } else {
+          isSection = hasRichMeta && !code;
+        }
+
+        if (isSection) {
+          card.className = 'product-card fade-up room-scene-card';
+          card.style.cssText = 'grid-column: 1 / -1; display: flex; flex-direction: row; overflow: hidden; border-radius: var(--radius); border: 1px solid var(--border); background: #f9f8f5;';
+          card.innerHTML = `
+            <div style="flex: 0 0 55%; max-width: 55%; overflow: hidden; position: relative;">
+              <img src="${imageUrl}" alt="${catalog.title} - Interior Showcase" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+              <div style="position:absolute;top:14px;left:14px;background:rgba(0,0,0,0.5);color:#fff;font-size:10px;font-weight:600;letter-spacing:2px;padding:4px 10px;border-radius:3px;text-transform:uppercase;">Room Scene</div>
+            </div>
+            <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 32px 40px; background: #f9f8f5;">
+              <p style="font-size: 10px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px;">Interior Showcase</p>
+              <h3 style="font-family: var(--font-display); font-size: 1.6rem; font-weight: 400; color: var(--walnut); line-height: 1.3; margin-bottom: 10px;">${catalog.title}</h3>
+              <p style="font-size: 0.85rem; color: #999;">See how our designs look in a real interior setting.</p>
+            </div>
+          `;
+        } else {
+          card.innerHTML = `
+            <div class="product-img" style="aspect-ratio: auto !important; position: relative; overflow: hidden; background: #fff; border-bottom: 1px solid var(--border);">
+              <img src="${imageUrl}" alt="${catalog.title} - ${fullLabel}" loading="lazy" style="width: 100%; height: auto; display: block;" />
+            </div>
+            <div class="product-body" style="text-align: center; padding: 16px 20px;">
+              ${code ? `<p style="font-size: 1.05rem; font-weight: 700; color: var(--walnut); margin-bottom: 3px; letter-spacing: 0.5px;">${code}</p>` : ''}
+              <h3 style="font-size: 0.82rem; color: #bbb; margin-bottom: 14px; font-weight: 400;">${pageLabel}</h3>
+              <a href="${waUrl}" target="_blank" rel="noopener" class="product-inquire-wa">
+                <i class="icon-wa icon-wa-mr"></i>Inquire on WhatsApp
+              </a>
+            </div>
+          `;
+        }
+
+        card.addEventListener('click', (e) => {
+          if (card.classList.contains('room-scene-card')) return;
+          if (e.target.closest('.product-inquire-wa')) return;
+          openLightbox(imageUrl, fullLabel, waUrl);
+        });
+
+        fragment.appendChild(card);
+      }
+
+      grid.appendChild(fragment);
+      setupAnimations();
     }
   }
 

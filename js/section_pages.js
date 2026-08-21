@@ -1,7 +1,8 @@
 const SECTION_PAGES = {
   // Define which page numbers (fileNum) act as full‑width interior‑scene sections per catalog
   "malacca_n": [2, 6, 11, 16, 21, 26, 31, 36, 41, 46, 51, 56, 61],
-  "rimal_emaar_n": [4, 8, 14, 17, 19, 21, 24, 25, 27, 31, 35, 37, 38, 40, 42, 43, 49, 52, 53, 57]
+  "rimal_emaar_n": [4, 8, 14, 17, 19, 21, 24, 25, 27, 31, 35, 37, 38, 40, 42, 43, 49, 52, 53, 57],
+  "rimal_wallcovering_n": [4, 5, 8, 11, 16, 19, 25, 29]
 };
 
 const CUSTOM_PAGE_ORDER = {
@@ -23,5 +24,16 @@ const CUSTOM_PAGE_ORDER = {
     42, 41,                             // Group 14: Gold Damask (EMR-44 room scene, EMR-44 product)
     52, 51, 50,                         // Group 16: 3D Lines (EMR-57 room scene, EMR-57, EMR-55 products)
     57, 54, 55, 56, 53                  // Group 17: Liquid Marble/Veins (EMR-61 blue scene, EMR-61 blue product, EMR-62/63 products, EMR-61 light coordinate scene)
+  ],
+  "rimal_wallcovering_n": [
+    2, 3,                               // Group 1: JM212206, JM210106
+    4, 5,                               // Room scenes
+    6,                                  // HL-8003
+    8, 7, 9, 10,                        // Group 2: YS-9742xx series (Room scene 8, YS-974210, YS-974212, YS-974213)
+    11, 12, 13, 14, 15,                 // Group 3: 10607, JM211206, AG90076, 10402 (with room scene 11)
+    16, 17, 18,                         // Group 4: JM210306, JM210506 (with room scene 16)
+    19, 20, 21, 22, 23, 24,             // Group 5: JM210305, A220204, 1005-6, JM210408, ME 20098 (with room scene 19)
+    25, 26, 27, 28,                     // Group 6: 1101-3, JM210907, W5-039 (with room scene 25)
+    29, 30, 31, 32, 33                  // Group 7: 52153, W5-043, F9125, 83004 (with room scene 29)
   ]
 };
